@@ -97,7 +97,7 @@ $dest_OnClick=
 
         $select_dest = New-Object System.Windows.Forms.FolderBrowserDialog
         $select_dest.Rootfolder = "MyComputer"
-        $select_dest.Description = "Select the source folder"
+        $select_dest.Description = "Select the destination folder (where you want the files to be moved)"
         $Show = $select_dest.ShowDialog()
         If ($Show -eq "OK")
         {
@@ -119,6 +119,27 @@ $cancel1_OnClick=
 $handler_form1_Load= 
 {
     
+}
+
+$source_OnClick= 
+{
+        [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") |
+        Out-Null     
+
+        $select_source = New-Object System.Windows.Forms.FolderBrowserDialog
+        $select_source.Rootfolder = "MyComputer"
+        $select_source.Description = "Select the source folder (containing the files you want to rename and move)"
+        $Show = $select_source.ShowDialog()
+        If ($Show -eq "OK")
+        {
+            write-host $select_source.SelectedPath
+            $sourcepath.Text = $select_source.SelectedPath
+            $global:select_source_path = $select_source.SelectedPath
+        }
+        Else
+        {
+            Write-Error "Operation cancelled by user."
+        }
 }
 
 $button_structure_OnClick= 
@@ -194,21 +215,23 @@ $button_structure_OnClick=
             # Replacement 4
             $newname = ($newname.replace("$string_to_replace4","$string_replacement4"))
         }
-
-    
-        #$newname = $newname + $file.Extension
-        #write-host $file.Name" ==> " -NoNewline -ForegroundColor Red; write-host $newname -ForegroundColor Green
-        $status1 = ($file.Name + " ==> ")
-        $status2 = $newname
-        $listBox_status.Items.Add("$status1")|Out-Null
-        $listBox_status.Items.Add("$status2")|Out-Null
         
+        #Rename
         #rename-item $file.FullName $newname
         #rename-item $file.Basename $newname
         $path_filename = ($global:select_source_path + "\" + $file.Name)
         $newname = $newname + "." + $fileending.Text
         rename-item -LiteralPath $path_filename $newname
         #rename-item $path_filename $newname
+
+        #Console Log
+        #$newname = $newname + $file.Extension
+        #write-host $file.Name" ==> " -NoNewline -ForegroundColor Red; write-host $newname -ForegroundColor Green
+        $status1 = $file.Name
+        $status2 = ("   ==> " + $newname)
+        $listBox_status.Items.Add("$status1")|Out-Null
+        $listBox_status.Items.Add("$status2")|Out-Null
+        $listBox_status.Items.Add("--------------------------")|Out-Null
         
         #rename-item ($global:select_source_path + "\" + $file.Name) $newname
         #Move-Item -Path ($global:select_source_path + "\" + $file.Name) -Destination ($global:select_source_path + "\" + $newname) #-Verbose
@@ -255,28 +278,6 @@ $button_structure_OnClick=
     }
 ##### END Move the files to the new dir
 
-}
-
-
-$source_OnClick= 
-{
-        [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") |
-        Out-Null     
-
-        $select_source = New-Object System.Windows.Forms.FolderBrowserDialog
-        $select_source.Rootfolder = "MyComputer"
-        $select_source.Description = "Select the source folder"
-        $Show = $select_source.ShowDialog()
-        If ($Show -eq "OK")
-        {
-            write-host $select_source.SelectedPath
-            $sourcepath.Text = $select_source.SelectedPath
-            $global:select_source_path = $select_source.SelectedPath
-        }
-        Else
-        {
-            Write-Error "Operation cancelled by user."
-        }
 }
 
 $button_format_OnClick= 
@@ -1197,29 +1198,29 @@ $folder.Controls.Add($source)
 $label16.DataBindings.DefaultDataSourceUpdateMode = 0
 
 $System_Drawing_Point = New-Object System.Drawing.Point
-$System_Drawing_Point.X = 599
+$System_Drawing_Point.X = 550
 $System_Drawing_Point.Y = 35
 $label16.Location = $System_Drawing_Point
 $label16.Name = "label16"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 23
-$System_Drawing_Size.Width = 100
+$System_Drawing_Size.Width = 220
 $label16.Size = $System_Drawing_Size
 $label16.TabIndex = 2
-$label16.Text = "File extension"
+$label16.Text = "File extension (without dot)"
 
 $folder.Controls.Add($label16)
 
 $label15.DataBindings.DefaultDataSourceUpdateMode = 0
 
 $System_Drawing_Point = New-Object System.Drawing.Point
-$System_Drawing_Point.X = 307
+$System_Drawing_Point.X = 315
 $System_Drawing_Point.Y = 35
 $label15.Location = $System_Drawing_Point
 $label15.Name = "label15"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 23
-$System_Drawing_Size.Width = 100
+$System_Drawing_Size.Width = 140
 $label15.Size = $System_Drawing_Size
 $label15.TabIndex = 1
 $label15.Text = "Destination Folder"
@@ -1235,7 +1236,7 @@ $label14.Location = $System_Drawing_Point
 $label14.Name = "label14"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 23
-$System_Drawing_Size.Width = 100
+$System_Drawing_Size.Width = 120
 $label14.Size = $System_Drawing_Size
 $label14.TabIndex = 0
 $label14.Text = "Source Folder"
