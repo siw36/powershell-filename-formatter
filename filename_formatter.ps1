@@ -170,8 +170,8 @@ $button_structure_OnClick=
     $string_replacement4 = $textBox14.Text
 
     foreach($file in $array_source_files){
-        #write-host $file
-
+        #write-host $file.FullName
+        
         # Read filename
         $newname = $file.Basename
         #$newname = $file.Name
@@ -180,7 +180,7 @@ $button_structure_OnClick=
         if(($string_to_replace1) -and ($delete1.checked -eq $true)){
             # Replacement 1
             $newname = ($newname.replace("$string_to_replace1",""))
-            write-host $newname
+            #write-host $newname
         }
         if(($string_to_replace2) -and ($delete2.checked -eq $true)){
             # Replacement 2
@@ -219,9 +219,10 @@ $button_structure_OnClick=
         #Rename
         #rename-item $file.FullName $newname
         #rename-item $file.Basename $newname
-        $path_filename = ($global:select_source_path + "\" + $file.Name)
+        #$path_filename = ($global:select_source_path + "\" + $file.Name)
+        $path_filename = $file.FullName
         $newname = $newname + "." + $fileending.Text
-        rename-item -LiteralPath $path_filename $newname
+        rename-item -LiteralPath "$path_filename" "$newname"
         #rename-item $path_filename $newname
 
         #Console Log
@@ -243,6 +244,7 @@ $button_structure_OnClick=
     }
 ##### END Format the filenames
 
+write-host "Rename complete"
 
 ##### Move the files to the new dir
     # Count the amount of files in the selected source dir, which end with the selected ending
@@ -272,10 +274,10 @@ $button_structure_OnClick=
 
         Move-Item -Path $file -Destination $global:select_dest_path #-Verbose
         $progressbar_count++
-        #write-host $progressbar_count
 
         $progressbar1.Value = $progressbar_count
     }
+write-host "Move complete"
 ##### END Move the files to the new dir
 
 }
