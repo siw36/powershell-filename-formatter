@@ -5,6 +5,7 @@ Filename Formatter is a simple PowerShell script that helps to customize filenam
 Regardless of the file extension.
 
 This is how it works:
+
 • Define rules for renaming:
 - Up to 4 characters / strings to be deleted.
 - Up to 4 characters / strings to be replaced.
@@ -17,5 +18,6 @@ This is how it works:
 
 Compatibility
 Requirements for the program:
+
 • Microsoft PowerShell 3.0 or later (pre-installed on every Windows)
 • The installed version can be found with the following command: `$PSVersionTable.PSVersion`
